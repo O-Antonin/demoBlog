@@ -11,7 +11,7 @@ class BlogController extends AbstractController
 /*
 Symfony fonctionne toujours avec un système de routage. Une méthode d'un controller sera executée en fonction de la route transmise sur l'Url
 ex: Si nous envoyons la route '/blog' dans l'url(http:localhost:8000/blog), cela fait appel au controller 'Blogcontroller" et execute la 
-méthode 'index()'.  Cette méthode renvoit un templare sur le navigateur (méthide render())
+méthode 'index()'.  Cette méthode renvoit un templare sur le navigateur (méthode render())
 Symfony se sert des annotations (@route())
 Les annotations doivent toujours contenir 4 astérix
 
