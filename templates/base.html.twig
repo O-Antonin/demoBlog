@@ -23,10 +23,13 @@
                     <div class="collapse navbar-collapse" id="navbarsExample04">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                        <a class="nav-link" href="#">Home</a>
+                        <a class="nav-link" href="{{ path('home') }}">Home</a>
+                        {# path() :fonction TWIG permettant de générer une URL en fonction du nom de la route à envoyer en argument.
+                            ex path('blog') --> URL '/blog' #}
+                        {# Le nom de la route 'blog' est déclarée dans le controller 'BlogController'   #}    
                         </li>
                         <li class="nav-item active">
-                        <a class="nav-link" href="#">Articles</a>
+                        <a class="nav-link" href="{{ path('blog') }}">Articles</a>
                         </li>
                     
                         <li class="nav-item dropdown">

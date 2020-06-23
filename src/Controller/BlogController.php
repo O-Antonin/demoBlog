@@ -16,6 +16,7 @@ Symfony se sert des annotations (@route())
 Les annotations doivent toujours contenir 4 astérix
 
 */
+
 {
     /**
      * @Route("/blog", name="blog")
@@ -26,6 +27,8 @@ Les annotations doivent toujours contenir 4 astérix
             'controller_name' => 'BlogController',
         ]);
     }
+
+    // home() : méthode
 
     /**
      *  @Route("/", name="home")
@@ -39,4 +42,19 @@ Les annotations doivent toujours contenir 4 astérix
              'age' => 25
          ]);
      }
+
+
+
+     /**
+      * @Route("/blog/12", name="blog_show")
+      */
+
+    public function show()
+    {
+        return $this->render('blog/show.html.twig');
+    }
+
+
+
+
 }
