@@ -7,46 +7,46 @@
 <h1 class="display-4 text-center my-4">Liste des articles</h1>
 
 <div class="row d-flex justify-content-around">
+  {# for est une boucle/ commande de TWIG, içi nous avons receptionné 10 articles de la BDD, donc nous devons passer en revue ces 10 articles via la boucle FOR #}
+   {# La variable 'articles' provient du controller 'BlogController' et de la méthode 'index()' {# ex: 1er tour : article n°1 # }
+   {# ex: 2eme tour : article n°2 # }
+   {# 3ème tour : article n°3 etc # } elle
+   contient les 10 articles sélectionnées en BDD #} 
+   {# date est une variable de réception qui réceptionne un article par tour de boucle #}
+   {# ex: 1er tour : article n°1 #}
+   {# ex: 2eme tour : article n°2 #}
+   {# 3ème tour : article n°3 etc #}
+
+      {% for data in articles  %}
 
         <div class="card mb-2" style="width: 18rem;">
-        <img src="https://picsum.photos/id/1037/200" class="card-img-top" alt="...">
+        <img src="{{ data.image }}" class="card-img-top" alt="...">
+        {#  nous piochons dans notre variable data avec le point '.' afin d'afficher l'image, le titre, le contenu et la date 
+        de l'article  #}
         <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <a href="{{ path('blog_show') }}" class="btn btn-primary">Go somewhere</a>
-          {##}
+          <h5 class="card-title">{{ data.title }}</h5>
+          <p class="card-text">{{ data.content|raw }}</p>
+          {# raw : filtre TWIG qui permet d'échapper les balises HTML stockées en BDD <p></p> et d'afficher le texte brut  #}
+          <hr>
+          <p>Posté le {{ data.createdAt|date("d/m/Y")  }} à  {{ data.createdAt|date("H:i:s")  }}</p>
+          {# La date est renvoyée par la BDD sous forme d'obet datetime, donc il n'est pas possible de l'afficher comme ceci :
+          data.createdAt, un objet ne peut être convertit en une chaine de caractère #}
+          {# Nous devons utiliser pour cela un filtre TWIG #}
+          {# date('d/m/Y')-->date('jour/mois/année') #}
+          {# date ('H:i:s')-->date('heure/minute/seconde') #}
+          <a href="{{ path('blog_show', {'id' : data.id} ) }}" class="btn btn-primary">Voir article</a>
+          {# path(''blog_show) : nom de la route pour le détail d'un article définit dans la méthode show() du controller 'BlogController' #}
+          {#  La route 'blog_show' permet dse voir le détail d'un article et cette route attend un paramètre de type 'id' dans
+          l'Url donc il faut fournir en 2ème argument de la méthode path() l'id de l'article  #}
         </div>
       </div>
 
 
-
-      <div class="card mb-2" style="width: 18rem;">
-        <img src="https://picsum.photos/id/1037/200" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <a href="{{ path('blog_show') }}" class="btn btn-primary">Go somewhere</a>
-        </div>
-      </div>
+      {% endfor %}
 
 
-      <div class="card mb-2" style="width: 18rem;">
-        <img src="https://picsum.photos/id/1037/200" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <a href="{{ path('blog_show') }}" class="btn btn-primary">Go somewhere</a>
-        </div>
-      </div>
 
-      <div class="card mb-2" style="width: 18rem;">
-        <img src="https://picsum.photos/id/1037/200" class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <a href="{{ path('blog_show') }}" class="btn btn-primary">Go somewhere</a>
-        </div>
-      </div>
+      
 
 </div>
 
