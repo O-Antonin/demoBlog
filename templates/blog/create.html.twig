@@ -1,12 +1,35 @@
 {% extends 'base.html.twig' %}
 
+
+
 {% block title %}Titre à définir{% endblock %}
 
 {% block body %}
 
 <h1 class="display-4 text-center my-4">Créer un nouvel article</h1>
 
-<form>
+{# form_start() fonction de TWIG permettant de commencer le formulaire, de générer la balise <form> ouvrante, Synfony intègre
+    automatiquement l'attribut 'method="post"'' #}
+{# form_end() fonction TWIG qui permet de termoiner le formulaire, de générer la balise </form> fermante #}   
+{# form row() fonction TWIG qui permet d'afficher les champs du formulaire 1 par 1 #}    
+{# Le bouton submit est codé en dur puisque le formulaire servira à la fois et à insérer mais aussi à modifier #}
+{# SI on crée la bouton avec la fonction add() dans le controller, il sera difficile de modifier son lable (modifier ou supprimer) #}
+
+{{ form_start(formArticle, {'attr': {'class':'col-md-7 mx-auto'}})  }}
+
+    {{ form_row(formArticle.title, {'attr': {'placeholder':"Saisir le titre de l'article..."}})  }}
+
+    {{ form_row(formArticle.content, {'attr': {'placeholder':"Contenu de l'article...", "rows": 15}})  }}
+
+    {{ form_row(formArticle.image, {'attr': {'placeholder':"Saisir l'url de l'image..."}})  }}
+
+    <button type="submit" class="btn btn-primary m-1">Enregistrer</button>
+
+{{ form_end(formArticle)  }}
+
+{#{{ form(formArticle) }} #}
+
+{# <form method="post">
     <div class="form-group">
       <label for="title">Titre</label>
       <input type="text" class="form-control" id="title" name="title">
@@ -22,7 +45,7 @@
         
       </div>
     <button type="submit" class="btn btn-primary">Enregistrer</button>
-  </form>
+  </form> #}
 
 
 
