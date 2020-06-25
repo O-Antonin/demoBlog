@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use DateTime;
 use App\Entity\Article;
 use App\Repository\ArticleRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BlogController extends AbstractController
@@ -55,7 +59,7 @@ Les annotations doivent toujours contenir 4 astérix
 
         dump($articles);// equivalent de var_dump();
 
-        return $this->render('blog/index.html.twig', [
+        return $this->render('blog/index.html.twig', [ // On envoit sur le navigateur le template à afficher
             'controller_name' => 'BlogController',
             'articles'=> $articles // On envoit sur le template 'index.html.twig' les articles sélectionnées en BDD $articles que nous allons traiter avec le langage TWIG sur le template
         ]);
@@ -80,11 +84,88 @@ Les annotations doivent toujours contenir 4 astérix
 
     /**
      *  @Route ("/blog/new", name="blog_create")
+     *  @Route ("/blog/{id}/edit", name="blog_edit")
      */
 
-    public function create()
+    public function create(Article $article = null, Request $request, EntityManagerInterface $manager)
     {
-        return $this->render('/blog/create.html.twig');
+
+        /*     La classe Request est une classe prédéfinie en Symfony qui stocke toutes les données véhiculées par les superglobales($_POST,$_COOKIE,$_SERVER etc...)
+                Nous avons avons accès aux données saisies dans le formulaire via l'objet $request
+                La propriété 'request->request' représente la superglobale $_POST, les données saisies dans le formulaire sont 
+                accessibles via cette propriété.
+                Pour insérer un nouvel article, nous devons instancier la classe/Entité Article pour avoir un objet article vide, afin de 
+                renseigner tous les setteurs de l'objet $article
+
+                EntityManagerInterface est une interface prédéfinie en symphony qui permet de manipuler les lignes de la BDD (INSERT, UPDATE, DELETE);
+                Elle possède des méthodes permettant de préparer et d'exécuter les requêtes SQL persist(), flush()
+
+                persist() est un eméthode issue de l'interface EntityManagerInterface qui permet de préparer et stocker la requete SQL
+                Flush() est une méthode issue de l'interfaceEntityManager qui permet de libérer et d'exécuter la requête SQL
+
+                redirectToRoute() est une méthode prédéfinie en symfony qui permet de rediriger vers une route spécifique
+                , dans notre cas on redirige après l'insertion la oute 'blog_show' (détail de l'article que l'on vient d'insérer) et on transmet
+                à la méthode l'id de l'article à envoyer dans l'URL
+
+                get() : méthode de l'objet $request qui permet de récupérer les données saisies aux différents indices 'name' du formulaire
+
+
+        */
+        // dump($request);
+
+        //if($request->request->count() > 0) // je pointe dans mon dump et vérifie qu'il ya du contenu
+//{
+  //  $article = new Article;
+    //$article->SetTitle($request->request->get('title'))
+      //      ->SetContent($request->request->get('content')) 
+       //     ->SetImage($request->request->get('image')) 
+         //   ->SetCreatedAt(new DateTime());
+
+    // $manager->persist($article);
+    // $manager->flush();   
+    
+    // dump($article);
+
+   // return $this->redirectToRoute('blog_show', [ // 2 arguments l'url et l'id sous tableau array qu'on précise à la méthode "redirectToRoute'
+   //     'id' => $article->getId()
+  //      ]);
+
+//}       
+        if(!$article)  // Si ce n'est pas une modification
+        {
+
+        $article = new Article;
+        }
+
+        
+
+        $form = $this->createFormBuilder($article)
+                      ->add('title')
+                      ->add('content')
+                      ->add('image')
+                      ->getForm(); 
+                      
+        $form->handleRequest($request);
+        
+        if($form->isSubmitted() && $form->isValid())
+        {
+            $article->setCreatedAt(new Datetime);
+            
+            $manager->persist($article);
+            $manager->flush();
+
+            dump($article);
+
+            return $this->redirectToRoute('blog_show', [ // 2 arguments l'url et l'id sous tableau array qu'on précise à la méthode "redirectToRoute'
+                   'id' => $article->getId()
+                     ]);
+
+
+        }
+
+        return $this->render('/blog/create.html.twig', [
+            'formArticle' => $form->createView()
+        ]);
 
     }
 
@@ -124,7 +205,7 @@ Les annotations doivent toujours contenir 4 astérix
         dump($article);
         
         return $this->render('blog/show.html.twig' , [
-            'article' => $article // on envoit avec le template show.html.twig l'article selectionné en BDD
+            'article' => $article // on envoit avec le template show.html.twig l'article 1 selectionné en BDD
             ]);
             //Arguments render ('template_a_envoyer', 'ARRAY options')
     }
