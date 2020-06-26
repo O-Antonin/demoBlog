@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use DateTime;
 use App\Entity\Article;
+use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,6 +13,9 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class BlogController extends AbstractController
+
+
+ 
 
 
 /*
@@ -87,7 +91,7 @@ Les annotations doivent toujours contenir 4 astérix
      *  @Route ("/blog/{id}/edit", name="blog_edit")
      */
 
-    public function create(Article $article = null, Request $request, EntityManagerInterface $manager)
+    public function form(Article $article = null, Request $request, EntityManagerInterface $manager)
     {
 
         /*     La classe Request est une classe prédéfinie en Symfony qui stocke toutes les données véhiculées par les superglobales($_POST,$_COOKIE,$_SERVER etc...)
@@ -130,41 +134,70 @@ Les annotations doivent toujours contenir 4 astérix
    //     'id' => $article->getId()
   //      ]);
 
-//}       
+//}    
+
+// $form = $this->createFormBuilder($article) // on a besoin de l'entité pour remplir l'article par le biais du formulaire donc on envoit article en paramètre
+        //               ->add('title')
+        //               ->add('content')
+        //               ->add('image')
+        //               ->getForm(); 
+
+// Si l'article n'est pas existant et non défini cela veut dire qu'aucun Id n'a ete transmis dans l'url.
+// C'est donc une insertion. Alors on instancie la classe Article afin d'avoir un objet $article vide.
+//On entre dans la condition seulement dans le cas d'une insertion  d'un nouvel article
         if(!$article)  // Si ce n'est pas une modification
         {
 
         $article = new Article;
         }
+        // On importe la classe permettant de créer le formulaire d'ajout / modification d'article(ArticleType)
+        // On envoit un 2eme argument l'objet $article pour bien spécifier que le formulaire est destiné à remplir l'objet $article
+        $form = $this->createForm(ArticleType::class, $article); // Import de la class article type qui va remplir l'article
 
         
 
-        $form = $this->createFormBuilder($article)
-                      ->add('title')
-                      ->add('content')
-                      ->add('image')
-                      ->getForm(); 
-                      
-        $form->handleRequest($request);
+       
+         //La méthode handleRequest() permet de récupérer toutes les valeurs du formulaire contenu dans $request ($_POST) afin de les
+         //envoyer directement dans les setteurs de l'objet $article             
+        $form->handleRequest($request); // Elle va faire le travail du setter (données saisies dans le formulaire)
+       
         
+        //Si le  formulaire a bien été soumis, qu'on a cliqué sur le bouton valider'submit' et que tout est bien validé, c'est à dire que chaque valeur
+        // du formulaire a bien été envoyé dans les bons setteurs alors on entre dans la condition IF
+
         if($form->isSubmitted() && $form->isValid())
+
+
         {
-            $article->setCreatedAt(new Datetime);
+
+
+            //Afin de garder la date d'origine de création d l'article en cas de modification,on controle l'existence de l'Id de l'article
+            //Si l'Id de l'article n'est pas définit, cela veut dire que c'est un nouvel article donc une insertion, alors on envoit
+            //objet datetime dans le setteur de l'article, on crée une date/heure pour un nouvel article
+            //On entre dans la condition seulement dans le cas de création d'un nouvel article
+            if(!$article->getId()) {
+
+            $article->setCreatedAt(new Datetime); 
             
-            $manager->persist($article);
-            $manager->flush();
+            }     // On rajoute le setter de la date car il n'est pas dans les champs du formulaire
+            
+            $manager->persist($article); // On prépare l'insertion
+            $manager->flush(); // On éxécute l'insertion
 
             dump($article);
 
             return $this->redirectToRoute('blog_show', [ // 2 arguments l'url et l'id sous tableau array qu'on précise à la méthode "redirectToRoute'
-                   'id' => $article->getId()
+                                                        // Une fois que le formulaire est validée , ca fait une redirection
+                   'id' => $article->getId()  
                      ]);
 
 
         }
 
-        return $this->render('/blog/create.html.twig', [
-            'formArticle' => $form->createView()
+        return $this->render('/blog/create.html.twig', [ // On peut tout afficher içi par le biais des paramètres
+            'formArticle' => $form->createView(),
+            'editMode'=> $article->getId() !== null // On teste si l'article possède un ID ou non. Si Id c'est une modification, si il n'y pas d'Id
+            // c'est une insertion
         ]);
 
     }

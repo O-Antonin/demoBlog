@@ -6,7 +6,23 @@
 
 {% block body %}
 
-<h1 class="display-4 text-center my-4">Créer un nouvel article</h1>
+{#  editMode : variable TWIG qui provient du controller 'BlogControllrt' de la méthode form(), elle permet de savoir
+si un article possède un ID ou non, cela permet de gérer l'affichage en fonction de l'action (ajout/modification) #}
+
+
+{# Si la condition IF renvoit TRUE, cela veut dire que l'article possèdde un ID, alors c'est une modification
+  Sinon dans tout les autres cas, l'article n'a pas d'ID alors c'est une insertion #}
+  
+<h1 class="display-4 text-center my-4">
+{% if editMode %}
+    Modification de l'article
+{% else %}
+    Créer un nouvel article
+{% endif %}
+
+
+
+</h1>
 
 {# form_start() fonction de TWIG permettant de commencer le formulaire, de générer la balise <form> ouvrante, Synfony intègre
     automatiquement l'attribut 'method="post"'' #}
@@ -23,7 +39,16 @@
 
     {{ form_row(formArticle.image, {'attr': {'placeholder':"Saisir l'url de l'image..."}})  }}
 
-    <button type="submit" class="btn btn-primary m-1">Enregistrer</button>
+    <button type="submit" class="btn btn-primary m-1">
+        {% if editMode %}
+        Enregistrer les modifications
+
+        {% else %}
+        Enregistrer
+
+        {% endif %}
+
+    </button>
 
 {{ form_end(formArticle)  }}
 
