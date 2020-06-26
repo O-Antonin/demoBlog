@@ -18,6 +18,7 @@
       <hr>
       <p>  Posté le {{ article.createdAt|date("d/m/Y")}} à   {{ article.createdAt|date("H:i:s")  }}</p>
      
+      <a href="{{ path('blog_edit', {'id': article.id}) }}" class="text-left btn btn-warning">Modifier</a> {# je renvoie l'id dans le parametre en plus du path #}
     </div>
   </div>
 
