@@ -16,10 +16,45 @@
       <h5 class="card-title text-center">{{ article.title }}</h5>
       <p class="card-text"> {{ article.content|raw }}</p>
       <hr>
-      <p>  Posté le {{ article.createdAt|date("d/m/Y")}} à   {{ article.createdAt|date("H:i:s")  }}</p>
+      <p>  Posté le {{ article.createdAt|date("d/m/Y")}} à   {{ article.createdAt|date("H:i:s")  }} dans la catégorie <strong>{{article.category.title}}</strong></p>
      
-      <a href="{{ path('blog_edit', {'id': article.id}) }}" class="text-left btn btn-warning">Modifier</a> {# je renvoie l'id dans le parametre en plus du path #}
+      <span><a href="{{ path('blog_edit', {'id': article.id}) }}" class="text-left btn btn-warning">Modifier</a> </span>{# je renvoie l'id dans le parametre en plus du path #}
     </div>
-  </div>
+</div>
+
+<div class="col-md-12">
+
+
+    <h2 class="text-center mt-5">Derniers avis...</h2>
+
+    {# Grace aux relations bi-directionnelles, lorsque nous selectionnons dans une table SQL, nous avons accès à toutes 
+      les données, il faut pour cela avoir créer des relations entre les tables ( clé étrangère) #}
+    {# Par exemple, dans notre cas si nou sselectionnons l'article id 1 dans la BDD, nous avons accès aux données
+    de l'article mais aussi aux données des autres tables qui sont liées à l'article mais aussi à tous les commentairs liés à l'article en BDD #}  
+    {#On pioche dans la variable TWIG 'article afin d'accéder aux commentaires de l'article 'article.comments' #}
+    {#'comment' est une variable de réception qui réceptionne une ligne de commentaire de la BDD par tour de boucle#} 
+    {#On boucle avec FOR puisque que plusieurs commentaires sont liés à l'article #}
+    {% for comment in article.comments %}
+
+    <div class="row border rounded mb-2 bg-dark text-white">
+        <div class="col-md-2">
+          <span>{{ comment.author }}</span>
+          <small class="font-italic">({{ comment.createdAt|date('d/m/Y à H:i:s') }})   </small>
+
+        </div>
+        <div class="col-md-10">
+          <p>{{ comment.content|raw }}</p>
+
+        </div>
+
+    </div>
+   
+</div>
+
+
+    {% endfor %}
+      
+  
+
 
 {% endblock %}

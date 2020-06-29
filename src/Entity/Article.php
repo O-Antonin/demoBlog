@@ -23,15 +23,13 @@ class Article
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(
-     *  min = 10,
-     *  max = 50,
-     *  minMessage = "Le titre est trop court",
-     *  maxMessage = "Le titre est trop long" 
-     * 
-     * 
+     *      min = 10,
+     *      max = 50,
+     *      minMessage = "Le titre est trop court",
+     *      maxMessage = "Le titre est trop long"
      * )
      */
-    private $title;
+    private $title; 
 
     /**
      * @ORM\Column(type="text")
@@ -41,8 +39,8 @@ class Article
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Url(
-     * message = " l'url  '{{ value }}' de l'image est invalide !",
-     * protocols = {"http", "https", "ftp"}
+     *      message = "L'URL '{{ value }}' de l'image invalide !!",
+     *      protocols = {"http", "https", "ftp"}
      * )
      */
     private $image;
@@ -78,7 +76,7 @@ class Article
         return $this->title;
     }
 
-    public function setTitle(string $title): self
+    public function setTitle(string $title): self 
     {
         $this->title = $title;
 
@@ -163,4 +161,6 @@ class Article
 
         return $this;
     }
+
+    
 }

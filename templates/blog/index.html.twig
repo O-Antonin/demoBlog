@@ -25,10 +25,12 @@
         de l'article  #}
         <div class="card-body">
           <h5 class="card-title">{{ data.title }}</h5>
-          <p class="card-text">{{ data.content|raw }}</p>
+          <p class="card-text">{{ data.content|slice(0, 100)|raw }}...</p>
+          {# slice(): fonction TWIG qui retourne #}
           {# raw : filtre TWIG qui permet d'échapper les balises HTML stockées en BDD <p></p> et d'afficher le texte brut  #}
           <hr>
-          <p>Posté le {{ data.createdAt|date("d/m/Y")  }} à  {{ data.createdAt|date("H:i:s")  }}</p>
+          <p>Posté le {{ data.createdAt|date("d/m/Y")  }} à  {{ data.createdAt|date("H:i:s")  }}
+            dans la categorie <strong> {{data.category.title}}</strong></p>
           {# La date est renvoyée par la BDD sous forme d'obet datetime, donc il n'est pas possible de l'afficher comme ceci :
           data.createdAt, un objet ne peut être convertit en une chaine de caractère #}
           {# Nous devons utiliser pour cela un filtre TWIG #}
