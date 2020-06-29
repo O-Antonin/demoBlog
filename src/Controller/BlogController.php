@@ -175,7 +175,7 @@ Les annotations doivent toujours contenir 4 astérix
             //Si l'Id de l'article n'est pas définit, cela veut dire que c'est un nouvel article donc une insertion, alors on envoit
             //objet datetime dans le setteur de l'article, on crée une date/heure pour un nouvel article
             //On entre dans la condition seulement dans le cas de création d'un nouvel article
-            if(!$article->getId()) {
+            if(!$article->getId()) { // SI L'article n'a pas d'ID
 
             $article->setCreatedAt(new Datetime); 
             
