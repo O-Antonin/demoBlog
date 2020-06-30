@@ -35,6 +35,8 @@ si un article possède un ID ou non, cela permet de gérer l'affichage en foncti
 
     {{ form_row(formArticle.title, {'attr': {'placeholder':"Saisir le titre de l'article..."}})  }}
 
+    {{ form_row(formArticle.category)  }}
+
     {{ form_row(formArticle.content, {'attr': {'placeholder':"Contenu de l'article...", "rows": 15}})  }}
 
     {{ form_row(formArticle.image, {'attr': {'placeholder':"Saisir l'url de l'image..."}})  }}
