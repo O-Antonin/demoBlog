@@ -32,9 +32,14 @@
                         <a class="nav-link" href="{{ path('blog') }}">Articles</a>
                         </li>
                         <li class="nav-item active">
-                            <a class="nav-link" href="{{ path('blog_create') }}">Création article</a>
-                            </li>
-                    
+                        <a class="nav-link" href="{{ path('blog_create') }}">Création article</a>
+                        </li>
+                        <li class="nav-item active">
+                        <a class="nav-link" href="{{ path('security_registration') }}">S'inscrire</a>
+                        </li>    
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{{ path('security_login') }}">identifiez-vous</a>
+                            </li> 
                         <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
                         <div class="dropdown-menu" aria-labelledby="dropdown04">
@@ -47,7 +52,7 @@
                     
                     </div>
                 </nav>
-
+                    {{ dump(app.user) }}
           <section class="container mon-conteneur">
 
         {% block body %}

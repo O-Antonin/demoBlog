@@ -1,14 +1,45 @@
 security:
+
+    
+    # déclarations de l'encodeur, on précise à Symfony que nous allons encoder un paramètre dans la classe/Entité User (password)
+    # On précise l'encodage de type (bcrypt)
+    encoders:
+        App\Entity\User:
+            algorithm: bcrypt
+
+
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         users_in_memory: { memory: null }
+        # On indique à Symfony où sont stockées les données du user(in_database) et quelles propriétés il va devoir controler ( email)
+        in_database:
+            entity:
+                class: App\Entity\User
+                property: email
+        # firewalls : quelle partie du site nous allons protéger et par quel moyen?
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+        # main : contenu du site
         main:
             anonymous: lazy
-            provider: users_in_memory
+            # le firewall 'main', le contenu du site sera protégé avec les données stockées en BDD dans la table User(provider défini)
+            provider: in_database
+
+            # on indique à Symfony que le site est protégé par un système de formulaire de connexion (form_login)
+            form_login:
+                # login_path permet d'indiquer à Symfony qur quelle route de trouve le formulaire de connexion (form_login)
+                login_path: security_login
+                # check_path permet d'indiquer à Symfony sur quelle route il doit controller les données saisies dans le formulaire de connexion
+                check_path: security_login
+
+            # on indique la route qui permet de se déconnecter
+            logout:
+                path: security_logout
+                target: blog
+                # Une fois déconnecté, ça redirige vers la page des articles
+
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
